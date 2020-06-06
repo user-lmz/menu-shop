@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<style type="text/css">
+			/*基础样式*/
+			[v-cloak]{
+				display: none;
+			}
+			*{
+			  padding: 0;
+			  margin: 0;
+			}
+			.header{
+			  width: 100%;
+			  height: 150px;
+			  background: #555;
+			}
+			.swiper-container{
+				margin-bottom: 150px;
+			}
+			#se{
+				overflow: hidden;
+				width: 100%;
+				background: #fff;
+				top: 0;
+			}
+			.login-status{
+				position: absolute;
+				color: #A52A2A;
+				right: 0;
+			}
+			.search{
+				text-align: center;
+				height: 40px;
+			}
+			.search img{
+				position: relative;
+				left: 38px;
+				top: 8px;
+			}
+			.search input{
+				height: 80%;
+				padding-left: 40px;
+				width: 120px;
+				overflow: hidden;
+				border: 1px solid blue;
+			}
+			.search input::-webkit-input-placeholder{
+				/* placeholder颜色  */
+				color: #aab2bd;
+				/* placeholder字体大小  */
+				font-size: 16px;
+				/* placeholder位置  */
+				text-align: center;
+			}
+			.search button{
+				display: inline-block;
+				height: 80%;
+				width: 30px;
+				border: none;
+				background-color: aquamarine;
+			}
+			.search-block{
+				width: 25%;
+				float: left;
+				text-align: center;
+				background: #eee;
+			}
+			.search-result{
+				width: 75%;
+				text-align: center;
+				float: left;
+			}
+			.confirm{
+				display: inline-block;
+				margin: 10px auto;
+				font-size: larger;
+				background-color: burlywood;
+				border: 1px solid red;
+			}
+			.swiper-container-ul{
+			  list-style: none;
+			  overflow: hidden;
+			  width: 100%;
+			  background: #fff;
+			  top: 0;
+			}
+			.swiper-container-ul-li{
+			  width: 50%;
+			  height: 40px;
+			  line-height: 40px;
+			  float: left;
+			  text-align: center;
+			}
+			.actives{
+			  border-bottom: 1px solid #3190e8;
+			  color: #3190e8;
+			}
+			.content{
+			  width: 100%;
+			  overflow: hidden;
+			}
+			.left{
+			  top: 81px;
+			  float: left;
+			  width: 25%;
+			  height: 100%;
+			  background: #eee;
+			}
+			.left ul{
+			  list-style: none;
+			}
+			.left ul li{
+			  padding: 15px 5px;
+			  text-align: center;
+			}
+			.active{
+			  background: #fff;
+			  border-left: 2px solid #3190e8;
+			}
+			.right{
+			  float: left;
+			  width: 75%;
+			  height: 100%;
+			}
+			.right ul{
+			  list-style: none;
+			}
+			.class-title{
+			  padding: 7px 10px;
+			  background: #eee;
+			}
+			.item{
+			  overflow: hidden;
+			  width: 100%;
+			  padding: 10px;
+			  background: #fff;
+			  border-bottom: 1px solid #eee;
+			}
+			.item-left{
+			    float: left;
+			}
+			.item-right{
+				float: left;
+				padding: 0 10px;
+			}
+			.item-detail{
+				float: right;
+				margin-right: 50px;
+			}
+			.item-detail a{
+				text-decoration: none;
+			}
+			.add input{
+				width: 40px;
+				text-align: center;
+			}
+			.add button{
+				width: 20px;
+			}
+			.add .b1{
+				width: auto;
+			}
+			.item-img{
+			    width: 100px;
+			    height: 100px;
+			    background: #eee;
+			}
+			.item-img img{
+				width: 100%;
+			}
+			.title{
+			  width: 150px;
+			  height: 20px;
+			  margin-top: 10px;
+			  background: #eee;
+			  text-align: center;
+			}
+			.subtitle{
+			  width: 70px;
+			  height: 20px;
+			  margin-top: 10px;
+			  background: #eee;
+			}
+			.material{
+				height: 20px;
+				margin-top: 10px;
+				background: #ffaaff;
+			}
+			.price{
+				width: 110px;
+			    height: 20px;
+			    margin-top: 10px;
+			    background: #eee;
+			}
+			.shop-car{
+				background-color: antiquewhite;
+				text-align: center;
+				position: fixed;
+				list-style: none;
+				overflow: scroll;
+				border: 1px solid aqua;
+				width: 100%;
+				height: 100px;
+				bottom: 0;
+			}
+			.clear-shop{
+				position: absolute;
+				border: none;
+				background-color: crimson;
+				right: 0;
+			}
+		</style>	
+	</head>
+	<body>
+		<div class="header">
+			
+		</div>
+		<div class="swiper-container">			
+			<div id="se" v-cloak>
+				<!-- 登录状态 -->
+				<a class="login-status">未登录</a>
+				<!-- 搜索框 -->
+				<div class="search">
+					<img src="./img/search.jpg" alt="">
+					<input type="text" v-model="text" placeholder="请输入搜索条件">
+					<button  @click="search">搜索</button>
+				</div>
+				<!-- 搜索结果 -->
+				<div class="search-block" v-if="view === true">
+					<h3>搜索结果</h3>
+				</div>
+				<div class="search-result" v-if="view === true && items.length != 0">
+					<div class="item" v-for="(item, i) in items">
+						<div class="item-left">
+							<div class="item-img"><img :src="`./img/${item.type}/${item.list.img}`"></div>
+						</div>
+						<div class="item-right">
+							<div class="title">{{ item.list.title }}</div>
+							<div class="price">价格：￥{{ item.list.price*item.list.text }}</div>
+							<div class="add">
+								<button v-on:click="plus(i)">+</button>
+								<input type="text" v-model:value="item.list.text">
+								<button v-on:click="subtract(i)">-</button>
+								&nbsp;&nbsp;&nbsp;<button class="b1" @click="add(i)">添加</button>
+							</div>
+						</div>
+						<div class="item-detail">
+							<a href="#">详细信息...</a>
+						</div>
+					</div>
+					<button class="confirm" @click=" view=false, items=[]">确认</button>	
+				</div>
+				<!-- 商品 <-> 详情 -->
+				<ul class="swiper-container-ul">
+					<li class="swiper-container-ul-li actives">商品</li>
+					<li class="swiper-container-ul-li">详情</li>
+				</ul>
+			</div>
+					
+			<!-- 下半部分 -->
+			<div class="swiper-wrapper">
+				<div class="content">
+					<!--左侧-->
+					<div class="left" id="left" v-cloak>
+						<ul>
+							<li v-for="item in items">{{item.name}}</li>
+						</ul>
+					</div>
+	
+					<!--右侧-->
+					<div class="right" id="right" v-cloak>
+						<ul>
+							<li v-for="(item, index) in items">{{item.name}}
+								<div class="class-title">{{item.type}}</div>
+								<div v-for="(ite, index1) in item.list">
+									<div class="item">
+										<div class="item-left">
+											<div class="item-img"><img :src="`./img/${item.type}/${ite.img}`"></div>
+										</div>
+										<div class="item-right">
+											<div class="title">{{ite.title}}</div>
+											<div class="material">原材料：{{ite.material}}</div>
+											<div class="price">价格：￥{{ite.price*ite.text}}</div>
+											<div class="add">
+												<button v-on:click="plus(index, index1)">+</button>
+												<input type="text" v-model:value="ite.text" >
+												<button v-on:click="subtract(index, index1)">-</button>
+												&nbsp;&nbsp;&nbsp;<button class="b1" @click="add(index, index1)">添加</button>
+											</div>
+										</div>
+										<div class="item-detail">
+											<a href="#">详细信息...</a>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>						
+					</div>					
+				</div>
+			</div>
+			<div v-if="selects.length != 0" class="shop-car" id="shop" v-cloak>				
+				<button class="clear-shop" @click="selects.splice(0,selects.length)">清空购物车</button>
+				<h3 style="text-align: center;">购物车</h3>				
+				<div 
+					is="result"
+					v-for="(select, index) in selects"
+					v-bind:key="select.id"
+					v-bind:select="select"				
+					v-on:remove="selects.splice(index,1)"				
+				></div>
+				<div v-if="totalPrice != '0'" style="text-align: center;" >总价格：￥{{ totalPrice }}</div>
+			</div>
+		</div>
+		
+	</body>
+	
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+	<script>
+	    $(function () {
+	        $('.content').css('height',$('right').height)
+	        $('.left ul li').eq(0).addClass('active');
+	
+	        $(window).scroll(function () {
+	            /* 这里在滚动的时候做监听,如果翻上去的部分超过150（150是header的高度）的时候，
+	            切换商品和左侧这里做绝对定位，然后右侧的margin-left设置成左侧的宽度*/
+	
+	            if($(window).scrollTop()>= 150){
+	                $('#se').css('position','fixed');
+	                $('.left').css('position','fixed')
+	                $('.right').css('margin-left',$('.left').width());
+	            }else{
+	                $('#se').css('position','')
+	                $('.left').css('position','')
+	                $('.right').css('margin-left','')
+	            }
+	
+	            // 获取右侧当前li距离顶端的高度 - 右侧已经翻上去的高度 - head的高度
+	            $('.right ul li').each(function () {
+	                var target = parseInt($(this).offset().top - $(window).scrollTop() - 150)
+	                console.log(parseInt($(this).offset().top),$(window).scrollTop())
+	                var i = $(this).index()
+	
+	            // if target<=0 清除所又li的active, 给当前li赋予active
+	
+	                if(target<=0){
+	                    $('.left ul li').removeClass('active');
+	                    $('.left ul li').eq(i).addClass('active')
+	                }
+	            })
+	        });
+	
+	        // 点击左侧li通过下标找到相应li的位置，通过animate滚动到相应的位置
+	        $('.left ul li').click(function () {
+	            var i = $(this).index('.left ul li')
+	            $('body, html').animate({scrollTop: $('.right ul li').eq(i).offset().top-80},500)
+	        });
+			
+			$('.swiper-container-ul-li').click(function(){ 
+			    var index = $(this).index(); 
+			    if(index == 0){ 
+			      $('.swiper-slide').eq(0).show(); 
+			      $('.swiper-container-ul-li').eq(0).addClass('actives'); 
+			      $('.swiper-slide').eq(1).hide(); 
+			      $('.swiper-container-ul-li').eq(1).removeClass('actives'); 
+			    }else { 
+			      $('.swiper-slide').eq(0).hide(); 
+			      $('.swiper-container-ul-li').eq(0).removeClass('actives'); 
+			      $('.swiper-slide').eq(1).show(); 
+			      $('.swiper-container-ul-li').eq(1).addClass('actives'); 
+			    } 
+			});
+	    })
+	</script>
+	<script>
+		//购物车组件
+		Vue.component('result', {
+			props: ['select'],
+			data: function(){
+				return {
+					style: {
+						textAlign: 'center'
+					},
+					style1: {
+						display: 'inline-block',
+						fontWeight: 'bolder',
+						color: '#DC143C',
+						marginRight: '20px',
+						width: '115px'
+					},
+					style2: {
+						width: '40px',
+						textAlign: 'center'
+					},
+					style3: {
+						display: 'inline-block',
+						width: '60px',
+						color: 'blue'
+					}
+				} 
+			},
+			template: 
+			`<div class="box1"><span :style="style1">{{ select.name }}</span>数量：<input v-model:value="select.count" :style="style2">
+			&nbsp;&nbsp;&nbsp;价格:<span :style="style3">￥{{ select.count*select.price }}</span>
+			&nbsp;&nbsp;<button @click="$emit('remove')">Remove</button></div>`
+		})
+		//数据
+		var se = new Vue({
+			el: '#se',
+			data: function(){
+				return {
+					text: '',
+					items: [],
+					view: false
+				}				
+			},
+			methods: {
+				search: function() {
+					for(var i = 0; i < right.items.length; i++){
+						for(var j = 0; j < right.items[i].list.length; j++){
+							if(this.text == '')
+								break;
+							if(right.items[i].list[j].title.indexOf(this.text) != -1) {
+								this.items.push({type: right.items[i].type, list: right.items[i].list[j] })
+							}
+						}
+					}
+					this.view = true
+				},
+				/* 定时second秒后还原 */
+				restore: function(second, index){
+					setTimeout(()=>{
+						this.items[index].list.text = 1
+						this.items[index].list.money = this.items[index].list.price
+					}, 1000*second)
+				},
+				plus: function(index){
+					this.items[index].list.text += 1
+					this.items[index].list.money = this.items[index].list.text*this.items[index].list.price
+					this.restore(3, index)
+				},
+				subtract: function(index){
+					if(this.items[index].list.text > 1){
+						this.items[index].list.text-=1
+						this.items[index].list.money=this.items[index].list.text*this.items[index].list.price
+					}
+					this.restore(3, index)
+				},
+				add: function(index){
+					right.selects.push({
+						id: right.nextSelectId++, 
+						name: this.items[index].list.title,
+						count: this.items[index].list.text,
+						money: this.items[index].list.money,
+						price: this.items[index].list.price
+					})
+				},
+			},
+			/* watch: {
+				text: function(val){
+					if(val != 1) {
+						
+					}
+				}
+			} */
+		});
+	    var left = new Vue({
+	        el: '#left',
+	        data: {
+	            items: [
+	                { name : '主食' },
+	                { name : '汤品' },
+	                { name : '炒菜' },
+	                { name : '盖浇饭' },
+	                { name : '饮料' },
+	                /* { name : '分类6' },
+	                { name : '分类7' },
+	                { name : '分类8' } */
+	            ]
+	        }
+	    });
+	    var right = new Vue({
+	        el: '#right',
+	        data: {
+				error: false,
+				nextSelectId: 0,
+				flag: '',
+				timer: '',
+				selects: [],
+	            items: [
+	                { type : '主食',list : [ 
+						{ title: '米饭', price: 1, text: 1, money: 1, img: '米饭.jpg', material: '泰国香米'},
+						{ title: '小笼包', price: 10, text: 1, money: 10, img: '小笼包.jpg', material: '面粉，猪肉，包菜'},
+						{ title: '花卷', price: 2, text: 1, money: 2, img: '花卷.jpg', material: '面粉，葱，盐'},
+						{ title: '玉米馒头', price: 3, text: 1, money: 3, img: '玉米馒头.jpg', material: '玉米，面粉'},
+						{ title: '麻辣汤粉', price: 12, text: 1, money: 12, img: '麻辣汤粉.jpg', material: '米粉，辣椒油，原骨汤'},						
+					]},
+	                { type : '汤品',list : [ 
+						{ title: '枸杞米酒汤', price: 8, text: 1, money: 8, img: '枸杞米酒汤.jpg', material: '枸杞，米酒'},
+						{ title: '莲耳汤', price: 18, text: 1, money: 18, img: '莲耳汤.jpg', material: '莲子，白木耳，红枣'},
+						{ title: '玉米排骨汤', price: 14, text: 1, money: 14, img: '玉米排骨汤.jpg', material: '玉米，排骨，纯净水'},
+					]},
+	                { type : '炒菜',list : [ 
+						{ title: '豆角烧茄子', price: 8, text: 1, money: 8, img: '豆角烧茄子.jpg', material: '豆角，茄子，大蒜'},
+						{ title: '青椒啤酒鸭', price: 18, text: 1, money: 18, img: '青椒啤酒鸭.jpg', material: '青椒，鸭，啤酒，酱油'},
+						{ title: '酸辣土豆丝', price: 8, text: 1, money: 8, img: '酸辣土豆丝.jpg', material: '土豆，小辣椒，陈醋'},
+						{ title: '蒜台腊肉', price: 15, text: 1, money: 15, img: '蒜台腊肉.jpg', material: '大蒜苔，腊肉，花生油'}
+					]},
+	                { type : '盖浇饭',list : [ 
+						{ title: '红烧鱼块盖浇饭', price: 12, text: 1, money: 12, img: '红烧鱼块盖浇饭.jpg', material: '草鱼，大蒜，辣椒，米饭'},
+						{ title: '麻婆豆腐盖浇饭', price: 11, text: 1, money: 11, img: '麻婆豆腐盖浇饭.jpg', material: '豆腐，花椒，剁椒，原油，米饭'},
+						{ title: '鲜虾盖浇饭', price: 16, text: 1, money: 16, img: '鲜虾盖浇饭.jpg', material: '基围虾，酱油，醋，米饭'},
+					]},
+	                { type : '饮料',list : [ 
+						{ title: '橙汁', price: 3, text: 1, money: 3, img: '橙汁.jpg', material: '鲜橙粉，糖，水'},
+						{ title: '可乐', price: 2.5, text: 1, money: 2.5, img: '可乐.jpg', material: '香草、肉桂、柠檬香味'},
+						{ title: '脉动', price: 4, text: 1, money: 4, img: '脉动.jpg', material: '纯净水、白砂糖、苹果汁、食用香精、使用添加剂'},
+						{ title: '咖啡', price: 8, text: 1, money: 8, img: '咖啡.jpg', material: '咖啡因，纯净水，白砂糖'},
+						{ title: '苏打水', price: 3.5, text: 1, money: 3.5, img: '苏打水.jpg', material: '小苏打，纯净水'},
+						{ title: '雪碧', price: 3, text: 1, money: 3, img: '雪碧.jpg', material: '水，果葡萄浆，白砂糖，食品添加剂'},
+					]},
+	                /* { class : '分类6',list : [ { title : '1' },{ title : '2' } ] },
+	                { class : '分类7',list : [ { title : '1' },{ title : '2' } ] },
+	                { class : '分类8',list : [ { title : '1' },{ title : '2' } ] } */
+	            ]
+	        },
+			methods: {
+				restore: function(second, index, index1){
+					setTimeout(()=>{
+						this.items[index].list[index1].text = 1
+						this.items[index].list[index1].money = this.items[index].list[index1].price
+					}, 1000*second)
+				},
+				plus: function(index, index1){
+					this.items[index].list[index1].text+=1
+					this.items[index].list[index1].money=this.items[index].list[index1].text*this.items[index].list[index1].price
+					this.restore(3, index, index1)
+				},
+				subtract: function(index, index1){
+					if(this.items[index].list[index1].text > 1){
+						this.items[index].list[index1].text-=1
+						this.items[index].list[index1].money=this.items[index].list[index1].text*this.items[index].list[index1].price
+					}
+					this.restore(3, index, index1)
+				},
+				add: function(index, index1){
+					this.selects.push({
+						id: this.nextSelectId++, 
+						name: this.items[index].list[index1].title,
+						count: this.items[index].list[index1].text,
+						money: this.items[index].list[index1].money,
+						price: this.items[index].list[index1].price
+					})
+					//this.items[index].list[index1].text = 1
+				},
+			},		
+	    });
+		var shop = new Vue({
+			el: '#shop',
+			data: {
+				selects: right.selects
+			},
+			computed: {
+				totalPrice: function(){
+					var total = 0
+					for (var i=0; i < this.selects.length; i++){
+						var item = this.selects[i]
+						total += item.price * item.count
+					}
+					return total.toString().replace(/\B(?=(\d{3})+$)/g,',')
+				},
+			},
+		})
+	</script>
+</html>
